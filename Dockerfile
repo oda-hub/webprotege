@@ -19,7 +19,8 @@ RUN rm -rf /usr/local/tomcat/webapps/* \
 
 WORKDIR /usr/local/tomcat/webapps/ROOT
 
-COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-4.0.0-beta-3-SNAPSHOT.jar /webprotege-cli.jar
-COPY --from=build /webprotege/webprotege-server/target/webprotege-server-4.0.0-beta-3-SNAPSHOT.war ./webprotege.war
+# TODO: names of these artifacts are version-dependent
+COPY --from=build /webprotege/webprotege-cli/target/webprotege-cli-4.0.2.jar /webprotege-cli.jar
+COPY --from=build /webprotege/webprotege-server/target/webprotege-server-4.0.2.war ./webprotege.war
 RUN unzip webprotege.war \
     && rm webprotege.war
