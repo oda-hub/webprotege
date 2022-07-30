@@ -7,9 +7,11 @@ COPY . /webprotege
 
 WORKDIR /webprotege
 
+ARG SKIP_TEST=true
+
 RUN mkdir -p /data/db \
     && mongod --fork --syslog \
-    && mvn clean package
+    && mvn clean package -Dmaven.test.skip=$SKIP_TEST
 
 FROM tomcat:8-jre11-slim
 
