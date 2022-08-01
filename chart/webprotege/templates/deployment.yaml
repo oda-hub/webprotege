@@ -19,7 +19,17 @@ spec:
       {{- end }}
       labels:
         {{- include "webprotege.selectorLabels" . | nindent 8 }}
+
+
     spec:
+      volumes:
+      - name: webprotege-srv-data
+        persistentVolumeClaim: 
+          claimName: webprotege-srv-data
+
+      - name: webprotege-mongodb-data
+        persistentVolumeClaim: 
+          claimName: webprotege-mongodb-data
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -47,6 +57,44 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts: 
+          - mountPath: /srv/webprotege
+            name: webprotege-srv-data
+
+        - name: {{ .Chart.Name }}-mongodb
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: mongo:4.1-bionic
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports: []
+            # - name: http
+            #   containerPort: 8080
+            #   protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - mongo --port 27018 --eval "rs.status()" | grep -vq "REMOVED"
+            initialDelaySeconds: 45
+            timeoutSeconds: 5         
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - mongo --port 27018 --eval "rs.status()" | grep -vq "REMOVED"
+            initialDelaySeconds: 45
+            timeoutSeconds: 5         
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          
+          volumeMounts: 
+          - mountPath: /data/db
+            name: webprotege-mongodb-data
+
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

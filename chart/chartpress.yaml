@@ -1,11 +1,11 @@
 charts:
   - name: webprotege
-    imagePrefix: oda-hub/webprotege-
+    imagePrefix: odahub/
     resetTag: latest
     # version to use when resetting the Chart.yaml's version field with the
     # --reset flag. It defaults to "0.0.1-set.by.chartpress". This is a valid
     # SemVer 2 version, which is required for a helm lint command to succeed.
-    # resetVersion: 1.2.3
+    #resetVersion: 1.2.3
     # The git repo whose gh-pages contains the charts. This can be a local
     # path such as "." as well but if matching <organization>/<repo> will be
     # assumed to be a separate GitHub repository.
